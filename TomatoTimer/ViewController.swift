@@ -10,14 +10,39 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    var rotateMotion : Bool = true
+    
+    @IBOutlet weak var tomatoImage: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
+        tomatoImage.isUserInteractionEnabled = true
+        tomatoImage.addGestureRecognizer(tapGestureRecognizer)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer)
+    {
+        let tappedImage = tapGestureRecognizer.view as! UIImageView
+        if rotateMotion {
+            rotateView(targetView: tappedImage, duration: 15)
+        }
+        
+        rotateMotion = !rotateMotion
+    }
+    
+    private func rotateView(targetView: UIView, duration: Double = 1.0) {
+        if !rotateMotion {
+            return
+        }
+        
+        UIView.animate(withDuration: duration, delay: 0.0, options: .curveLinear, animations: {
+            targetView.transform = targetView.transform.rotated(by: CGFloat(Double.pi))
+        })
+        { finished in
+            self.rotateView(targetView: targetView, duration: duration)
+        }
     }
 
 
